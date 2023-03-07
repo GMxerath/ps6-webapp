@@ -11,9 +11,21 @@ ui <- fluidPage(
   
   tabsetPanel(
     tabPanel("General Info",
-             h1("This is a UAH dataset app.")
-             ),
-    
+             h1("This is a UAH dataset app."),
+             p("This dataset shows the temperature of Earth's lower troposphere 
+               by year(",
+               em("1978 through 2023"),
+               "), month, and regions."),
+             p("In the ", 
+              strong("plot"),
+              "tab, it shows a plot shows a overall trend of temperature change."),
+             p("you can select a year range that you want to see.
+              Also, you can select different regions and different types of plot."),
+             p("In the ",
+               strong("table"),
+                "tab, you can select a year range that you want to see.
+                Also, you can select different regions and different types of plot."),
+    ),
     tabPanel("Plot",
              sidebarPanel(
                sliderInput("year_range", "Year Range:", 
