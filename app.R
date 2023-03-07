@@ -19,7 +19,7 @@ ui <- fluidPage(
              p("In the ", 
               strong("plot"),
               "tab, it shows a plot shows a overall trend of temperature change."),
-             p("you can select a year range that you want to see.
+             p("You can select a year range that you want to see.
               Also, you can select different regions and different types of plot."),
              p("In the ",
                strong("table"),
