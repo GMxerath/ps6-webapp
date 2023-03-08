@@ -23,8 +23,7 @@ ui <- fluidPage(
               Also, you can select different regions and different types of plot."),
              p("In the ",
                strong("table"),
-                "tab, you can select a year range that you want to see.
-                Also, you can select different regions and different types of plot."),
+                "tab, you can select a year and month you only want to see."),
     ),
     tabPanel("Plot",
              sidebarPanel(
@@ -38,18 +37,26 @@ ui <- fluidPage(
                             choices = c("Scatterplot", "Line Graph", "Bar Graph"),
                             selected = "Scatterplot")
              ),
-             mainPanel(plotOutput("scatterplot"))
+             mainPanel(plotOutput("scatterplot"),
+                       textOutput("plot_text"))
     ),
     tabPanel("Table",
-             sidebarPanel(),
-             mainPanel(tableOutput("table"))
+             sidebarPanel(
+               sliderInput("year", "Year",
+                           min = min(uah$year), max = max(uah$year),
+                           value = mean(uah$year)),
+               selectInput("month", "Month", unique(uah$month))
+             ),
+             mainPanel(
+               dataTableOutput("table"),
+               textOutput("table_text"))
     )
   )
 )
 
 server <- function(input, output) {
   
-  data_filtered <- reactive({
+  plot_filtered <- reactive({
     uah %>%
       filter(year >= input$year_range[1], year <= input$year_range[2],
              region == input$region) %>%
@@ -59,21 +66,21 @@ server <- function(input, output) {
   
   output$scatterplot <- renderPlot({
     if (input$plot_type == "Scatterplot") {
-      data_filtered() %>% 
+      plot_filtered() %>% 
       ggplot(aes(x = year, y = mean_temp)) +
         geom_point() +
         labs(title = paste0("Average Temperature by Year and Region (", input$region, ")"), 
             x = "Year", 
             y = "Average Temperature (°C)")
     } else if (input$plot_type == "Line Graph") {
-      data_filtered() %>% 
+      plot_filtered() %>% 
         ggplot(aes(x = year, y = mean_temp)) +
         geom_line() +
         labs(title = paste0("Average Temperature by Year and Region (", input$region, ")"), 
              x = "Year", 
              y = "Average Temperature (°C)")
     } else {
-      data_filtered() %>% 
+      plot_filtered() %>% 
         ggplot(aes(x = year, y = mean_temp)) +
         geom_col() +
         labs(title = paste0("Average Temperature by Year and Region (", input$region, ")"), 
@@ -82,11 +89,24 @@ server <- function(input, output) {
     }
   })
   
-  output$table <- renderTable({
-    
+  table_filtered <- reactive({
+    uah %>%
+      filter(year == input$year, month == input$month)
+  })
+  
+  output$table <- renderDataTable({
+    table_filtered()
+  })
+  
+  
+  output$plot_text <- renderText({
+    paste("Selected subset contains", nrow(plot_filtered()), "observations")
+  })
+  
+  output$table_text <- renderText({
+    paste("Selected subset contains", nrow(table_filtered()), "observations")
   })
 }
-
 
 shinyApp(ui = ui, server = server)
 
