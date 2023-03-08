@@ -1,0 +1,11 @@
+name: ps6-webapp
+title: ps6-webapp
+username:
+account: gmxerath
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8510569
+bundleId: 6929623
+url: https://gmxerath.shinyapps.io/ps6-webapp/
+when: 1678258518.80773
+lastSyncTime: 1678258518.80774
