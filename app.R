@@ -98,7 +98,6 @@ server <- function(input, output) {
     table_filtered()
   })
   
-  
   output$plot_text <- renderText({
     paste("Selected subset contains", nrow(plot_filtered()), "observations")
   })
@@ -109,4 +108,3 @@ server <- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)
-
